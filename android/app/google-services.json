@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "661929108827",
+    "project_id": "cardinal-6f875",
+    "storage_bucket": "cardinal-6f875.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661929108827:android:d70de8371f344a558b267e",
+        "android_client_info": {
+          "package_name": "com.botech.cardinal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG7tRJplc8iJ0ccVTCetcbH1UMciFANFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661929108827:android:fcce02d3473210658b267e",
+        "android_client_info": {
+          "package_name": "com.example.cardinal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG7tRJplc8iJ0ccVTCetcbH1UMciFANFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
