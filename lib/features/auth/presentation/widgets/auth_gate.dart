@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../injections.dart';
 import '../../../navigation/presentation/widgets/nav_bar.dart';
 import '../../domain/use_cases/login.dart';
+import '../../domain/use_cases/logout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../pages/login_page.dart';
@@ -48,8 +49,7 @@ class AuthGateProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AuthCubit(loginUseCase: sl<LoginUseCase>(),
-          listenAuthState: sl<ListenAuthStateUseCase>()),
+      create: (_) => sl<AuthCubit>(),
       child: const AuthGate(),
     );
   }

@@ -1,38 +1,41 @@
-import 'package:cardinal/core/helper/app_navigator.dart';
 import 'package:cardinal/features/auth/presentation/cubit/auth_state.dart';
-import 'package:cardinal/features/auth/presentation/pages/new_account_screen.dart';
+import 'package:cardinal/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:cardinal/features/auth/presentation/pages/verify_sms_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../injections.dart';
 import '../../../navigation/presentation/pages/home_screen.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/sign_up_state.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class NewAccountScreen extends StatelessWidget {
+  const NewAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _LoginView();
+    return BlocProvider<SignUpCubit>(
+      create: (_) => sl<SignUpCubit>(),
+      child: const _RegisterView(),
+    );
   }
 }
 
-class _LoginView extends StatelessWidget {
-  const _LoginView({super.key});
+class _RegisterView extends StatelessWidget {
+  const _RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    final phoneController = TextEditingController();
 
     return Scaffold(
-      body: BlocConsumer<AuthCubit, AuthState>(
+      body: BlocConsumer<SignUpCubit, SignUpState>(
         listener: (context, state) {
-          if (state is Authenticated) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-          } else if (state is AuthError) {
+          if (state is SignUpError) {
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -49,10 +52,18 @@ class _LoginView extends StatelessWidget {
                 ],
               ),
             );
+          } else if (state is SignUpCodeSent) {
+            // Aquí navegarías a la pantalla de verificación SMS
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => VerifyCodeScreen(verificationId: state.verificationId)),
+            );
+          } else if (state is SignUpSuccess) {
+            context.read<AuthCubit>().checkAuthState();
           }
         },
         builder: (context, state) {
-          if (state is AuthLoading) {
+          if (state is SignUpLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -65,14 +76,27 @@ class _LoginView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.lock, size: 80, color: Colors.blue),
+                      const Icon(Icons.person_add, size: 80, color: Colors.blue),
                       const SizedBox(height: 16),
                       Text(
-                        "Cardinal",
+                        "Create Account",
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       const SizedBox(height: 32),
-
+                      // Name
+                      TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Full Name',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) =>
+                        value!.isEmpty ? 'Enter your name' : null,
+                      ),
+                      const SizedBox(height: 16),
                       // Email
                       TextFormField(
                         controller: emailController,
@@ -88,7 +112,28 @@ class _LoginView extends StatelessWidget {
                         value!.isEmpty ? 'Enter email' : null,
                       ),
                       const SizedBox(height: 16),
-
+                      // Phone
+                      TextFormField(
+                        controller: phoneController,
+                        decoration: InputDecoration(
+                          labelText: 'Phone',
+                          prefixIcon: const Icon(Icons.phone),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Enter your phone number';
+                          }
+                          if (value.length < 8) {
+                            return 'Enter a valid phone number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       // Password
                       TextFormField(
                         controller: passwordController,
@@ -101,30 +146,35 @@ class _LoginView extends StatelessWidget {
                         ),
                         obscureText: true,
                         validator: (value) =>
-                        value!.isEmpty ? 'Enter password' : null,
+                        value!.length < 6 ? 'Min 6 characters' : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // Forgot password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            // TODO: implementar forgot password
-                          },
-                          child: const Text("Forgot Password?"),
+                      // Confirm Password
+                      TextFormField(
+                        controller: confirmPasswordController,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
+                        obscureText: true,
+                        validator: (value) => value != passwordController.text
+                            ? 'Passwords do not match'
+                            : null,
                       ),
                       const SizedBox(height: 24),
-
-                      // Login button
+                      // Register button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              context.read<AuthCubit>().login(
+                              context.read<SignUpCubit>().startSignUp(
+                                name: nameController.text.trim(),
                                 email: emailController.text.trim(),
+                                phone: phoneController.text.trim(),
                                 password: passwordController.text.trim(),
                               );
                             }
@@ -136,42 +186,22 @@ class _LoginView extends StatelessWidget {
                             ),
                           ),
                           child: const Text(
-                            'Login',
+                            'Register',
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Google Login button
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            // TODO: implementar login con Google
-                          },
-                          icon: const Icon(Icons.g_mobiledata, size: 28),
-                          label: const Text("Sign in with Google"),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Register
+                      // Already have account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Don’t have an account?"),
+                          const Text("Already have an account?"),
                           TextButton(
                             onPressed: () {
-                              AppNavigator.pushReplacement(context, NewAccountScreen());
+                              Navigator.pop(context);
                             },
-                            child: const Text("Sign up"),
+                            child: const Text("Login"),
                           ),
                         ],
                       ),

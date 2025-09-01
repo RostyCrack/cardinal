@@ -1,45 +1,45 @@
+import '../../domain/exceptions/auth_exceptions.dart';
 
-
-import 'package:cardinal/features/auth/domain/exceptions/auth_exceptions.dart';
-
-import '../../../../core/failure/failure.dart';
-
-class LoginException extends AuthFailure {
-  const LoginException(super.message);
+class LoginFailure extends AuthFailure {
+  const LoginFailure(super.message);
 }
 
-class MaximumAccountsException extends LoginException {
-  const MaximumAccountsException() : super('Se ha alcanzado el máximo de cuentas permitidas.');
+class MaximumAccountsFailure extends LoginFailure {
+  const MaximumAccountsFailure() : super('Se ha alcanzado el máximo de cuentas permitidas.');
 }
 
-class UserNotFoundException extends LoginException {
-  const UserNotFoundException() : super('Usuario no encontrado. Por favor, regístrese.');
+class UserNotFoundFailure extends LoginFailure {
+  const UserNotFoundFailure() : super('Usuario no encontrado. Por favor, regístrese.');
 }
 
-class WrongPasswordException extends LoginException {
-  const WrongPasswordException() : super('Email y/o contraseña incorrecta. Por favor, inténtelo de nuevo.');
+class WrongPasswordFailure extends LoginFailure {
+  const WrongPasswordFailure() : super('Email y/o contraseña incorrecta. Por favor, inténtelo de nuevo.');
 }
 
-class InvalidEmailException extends LoginException {
-  const InvalidEmailException() : super('El correo electrónico no es válido.');
+class InvalidEmailFailure extends LoginFailure {
+  const InvalidEmailFailure() : super('El correo electrónico no es válido.');
 }
 
-class UserDisabledException extends LoginException {
-  const UserDisabledException() : super('El usuario ha sido deshabilitado.');
+class UserDisabledFailure extends LoginFailure {
+  const UserDisabledFailure() : super('El usuario ha sido deshabilitado.');
 }
 
-class TooManyRequestsException extends LoginException {
-  const TooManyRequestsException() : super('Se ha bloqueado el acceso a este usuario temporalmente debido a muchos intentos de inicio de sesión fallidos. Por favor, inténtelo de nuevo más tarde.');
+class TooManyRequestsFailure extends LoginFailure {
+  const TooManyRequestsFailure() : super('Se ha bloqueado el acceso a este usuario temporalmente debido a muchos intentos de inicio de sesión fallidos. Por favor, inténtelo de nuevo más tarde.');
 }
 
-class OperationNotAllowedException extends LoginException {
-  const OperationNotAllowedException() : super('El inicio de sesión por correo electrónico y contraseña no está habilitado.');
+class OperationNotAllowedFailure extends LoginFailure {
+  const OperationNotAllowedFailure() : super('El inicio de sesión por correo electrónico y contraseña no está habilitado.');
 }
 
-class NetworkRequestFailedException extends LoginException {
-  const NetworkRequestFailedException() : super('Por favor, revise su conexión a internet y vuelva a intentarlo.');
+class NetworkRequestFailedFailure extends LoginFailure {
+  const NetworkRequestFailedFailure() : super('Por favor, revise su conexión a internet y vuelva a intentarlo.');
 }
 
-class NoAccountTypeException extends LoginException {
-  const NoAccountTypeException() : super('No se encontró el tipo de cuenta. Por favor, contacte al soporte.');
+class NoAccountTypeFailure extends LoginFailure {
+  const NoAccountTypeFailure() : super('No se encontró el tipo de cuenta. Por favor, contacte al soporte.');
+}
+
+class UnexpectedAuthFailure extends AuthFailure {
+  const UnexpectedAuthFailure() : super('Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.');
 }

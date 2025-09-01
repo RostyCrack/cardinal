@@ -18,17 +18,23 @@ class UserModel extends UserEntity {
   @override
   final String? displayName;
 
+  @override
+  @HiveField(3)
+  final String? phoneNumber;
+
   const UserModel({
     required this.id,
     required this.email,
     required this.displayName,
-  }) : super(id: id, email: email, displayName: displayName);
+    required this.phoneNumber,
+  }) : super(id: id, email: email, displayName: displayName, phoneNumber: phoneNumber);
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
       email: json['email'],
       displayName: json['displayName'],
+      phoneNumber: json['phoneNumber'],
     );
   }
 
@@ -37,6 +43,7 @@ class UserModel extends UserEntity {
       id: user.uid,
       email: user.email ?? '',
       displayName: user.displayName ?? "Usuario",
+      phoneNumber: user.phoneNumber,
     );
   }
 
@@ -45,12 +52,15 @@ class UserModel extends UserEntity {
       id: entity.id,
       email: entity.email,
       displayName: entity.displayName,
+      phoneNumber: entity.phoneNumber,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'email': email,
+    'displayName': displayName,
+    'phoneNumber': phoneNumber,
   };
 
 }

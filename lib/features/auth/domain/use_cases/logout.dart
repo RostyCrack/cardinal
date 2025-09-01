@@ -10,7 +10,7 @@ class LogoutUseCase extends UseCase<Unit, NoParams, AuthFailure> {
   LogoutUseCase(this.authRepository);
 
   @override
-  Future<Either<AuthFailure, Unit>> call(NoParams) async {
+  Future<Either<AuthFailure, Unit>> call(NoParams params) async {
     await authRepository.signOut();
     return Right(unit);
   }

@@ -4,12 +4,14 @@ class UserEntity {
   final String id;
   final String email;
   final String? displayName;
+  final String? phoneNumber;
 
 
   const UserEntity({
     required this.id,
     required this.email,
     this.displayName,
+    this.phoneNumber,
   });
 
   factory UserEntity.fromModel(UserModel model) {
@@ -19,4 +21,6 @@ class UserEntity {
       displayName: model.displayName,
     );
   }
+
+
 }

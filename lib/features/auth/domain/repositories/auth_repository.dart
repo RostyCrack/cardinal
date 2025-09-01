@@ -1,6 +1,6 @@
-import 'package:cardinal/features/auth/data/models/sign_up_request.dart';
+import 'package:cardinal/features/auth/data/models/sign_up_requests.dart';
+import 'package:cardinal/features/auth/data/models/sign_up_response.dart';
 import 'package:dartz/dartz.dart';
-
 import '../../data/models/user_model.dart';
 import '../entities/user_entity.dart';
 import '../exceptions/auth_exceptions.dart';
@@ -12,9 +12,10 @@ abstract class AuthRepository {
 
   Future<Either<AuthFailure, Unit>> signOut();
 
-  Future<Either<AuthFailure, UserModel>> signUp(SignUpRequest signUpRequest);
+  Future<Either<AuthFailure, SignUpResponse>> signUp(SignUpRequest signUpRequest);
 
   Future<Either<AuthFailure, Unit>> sendPasswordResetEmail(String email);
-
-
+  Future<Either<AuthFailure, Unit>> verifyPhoneNumber(VerifyPhoneNumberRequest request);
+  Future<Either<AuthFailure, UserEntity>> confirmSmsCode(ConfirmSmsCodeRequest request);
+  
 }
