@@ -1,19 +1,20 @@
-import 'package:cardinal/core/failure/failure.dart';
-import 'package:cardinal/core/use_case/use_case.dart';
+import 'package:cardinal/features/auth/data/models/sign_up_request.dart';
 import 'package:cardinal/features/auth/domain/entities/user_entity.dart';
 import 'package:cardinal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:cardinal/features/auth/domain/use_cases/save_user_locally.dart';
 import 'package:dartz/dartz.dart';
 
-class LoginUseCase extends UseCase<UserEntity, LoginParams, Failure> {
+import '../../../../core/use_case/use_case.dart';
+import '../exceptions/auth_exceptions.dart';
+
+class SignUpUseCase extends UseCase<Unit, SignUpRequest, AuthFailure> {
   final AuthRepository authRepository;
   final SaveUserLocallyUseCase saveUserLocally;
-
-  LoginUseCase({required this.authRepository, required this.saveUserLocally});
+  SignUpUseCase({required this.authRepository, required this.saveUserLocally});
 
   @override
-  Future<Either<Failure, UserEntity>> call(LoginParams params) async {
-    var userResponse = await authRepository.signIn(params.email, params.password);
+  Future<Either<AuthFailure, Unit>> call(params) async {
+    var userResponse = await authRepository.signUp(params);
     return userResponse.fold(
       (failure) {
         return Left(failure);
@@ -25,21 +26,12 @@ class LoginUseCase extends UseCase<UserEntity, LoginParams, Failure> {
             return Left(failure);
           },
           (unit) {
-            return Right(user);
+            return Right(unit);
           },
         );
       },
     );
   }
-}
 
-///Value Objects
-class LoginParams {
-  final String email;
-  final String password;
-
-  const LoginParams({
-    required this.email,
-    required this.password,
-  });
+  // Implement the sign-up logic here
 }

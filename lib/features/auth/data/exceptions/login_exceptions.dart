@@ -1,8 +1,10 @@
 
 
+import 'package:cardinal/features/auth/domain/exceptions/auth_exceptions.dart';
+
 import '../../../../core/failure/failure.dart';
 
-class LoginException extends Failure {
+class LoginException extends AuthFailure {
   const LoginException(super.message);
 }
 

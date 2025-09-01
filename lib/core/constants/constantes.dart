@@ -1,0 +1,1 @@
+const VEHICLE_STATUS_COLLECTION = 'vehicle_status';

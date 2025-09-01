@@ -6,6 +6,7 @@
 import 'dart:developer';
 
 import 'package:cardinal/features/auth/data/models/login_response.dart';
+import 'package:cardinal/features/auth/domain/exceptions/auth_exceptions.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,7 +15,7 @@ import '../exceptions/login_exceptions.dart';
 abstract class FirebaseAuthDataSource {
   Future<Either<LoginException, LoginResponse>> signIn(String email, String password);
   Future<Either<LoginException, UserCredential>> signUp(String email, String password);
-  Future<void> signOut();
+  Future<Either<AuthFailure, Unit>> signOut();
 }
 
 class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
@@ -72,11 +73,15 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Future<void> signOut() async {
+  Future<Either<AuthFailure, Unit>> signOut() async {
     try {
       await firebaseAuth.signOut();
+      return const Right(unit); // Éxito
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthFailure(e.message ?? 'Error al cerrar sesión'));
     } catch (e) {
-      throw Exception("SignOut failed: $e");
+      return Left(AuthFailure('Error desconocido al cerrar sesión'));
     }
   }
+
 }

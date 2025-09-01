@@ -17,21 +17,19 @@ class AuthCubit extends Cubit<AuthState> {
 
   void checkAuthState() {
     emit(const AuthInitial());
-    var userResponse = listenAuthState.call(NoParams());
-    userResponse.then((result) {
-      result.fold(
-            (failure) => emit(AuthError(failure.message)),
-            (stream) {
-          stream.listen((user) {
-            if (user != null) {
-              emit(Authenticated(user));
-            } else {
-              emit(const Unauthenticated());
-            }
-          });
-        },
-      );
-    });
+
+    listenAuthState.call(NoParams()).listen(
+          (user) {
+        if (user != null) {
+          emit(Authenticated(user));
+        } else {
+          emit(const Unauthenticated());
+        }
+      },
+      onError: (error) {
+        emit(AuthError(error.toString()));
+      },
+    );
   }
 
   /// 🔑 Login method
@@ -50,5 +48,11 @@ class AuthCubit extends Cubit<AuthState> {
           emit(Authenticated(user));
           },
     );
+  }
+
+
+  void logout() {
+
+    emit(const Unauthenticated());
   }
 }
