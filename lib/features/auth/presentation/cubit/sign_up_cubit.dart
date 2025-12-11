@@ -44,14 +44,11 @@ class SignUpCubit extends Cubit<SignUpState> {
         final verifyResult = await verifyPhoneNumberUseCase(
           VerifyPhoneNumberRequest(
             phoneNumber: phone,
-            codeSentCallback: (verificationId, token) {
-              emit(SignUpCodeSent());
-            },
           ),
         );
         verifyResult.fold(
               (failure) => emit(SignUpError(failure.message)),
-              (_) {},
+              (_) {emit(SignUpCodeSent());},
         );
       },
     );

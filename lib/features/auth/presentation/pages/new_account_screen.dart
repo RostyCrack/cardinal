@@ -1,3 +1,4 @@
+import 'package:cardinal/core/helper/app_navigator.dart';
 import 'package:cardinal/features/auth/presentation/cubit/auth_state.dart';
 import 'package:cardinal/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:cardinal/features/auth/presentation/pages/verify_sms_screen.dart';
@@ -53,10 +54,12 @@ class _RegisterView extends StatelessWidget {
               ),
             );
           } else if (state is SignUpCodeSent) {
-            // Aquí navegarías a la pantalla de verificación SMS
-            Navigator.push(
+            AppNavigator.push(
               context,
-              MaterialPageRoute(builder: (_) => VerifyCodeScreen(verificationId: state.verificationId)),
+              BlocProvider.value(
+                value: context.read<SignUpCubit>(),
+                child: VerifyCodeScreen(verificationId: state.verificationId),
+              ),
             );
           } else if (state is SignUpSuccess) {
             context.read<AuthCubit>().checkAuthState();

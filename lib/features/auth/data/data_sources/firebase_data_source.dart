@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../exceptions/login_exceptions.dart';
 import '../exceptions/singup_exceptions.dart';
 import '../models/sign_up_requests.dart';
+import '../models/sign_up_response.dart';
 import '../models/user_model.dart';
 
 abstract class FirebaseAuthDataSource {
@@ -25,7 +26,7 @@ abstract class FirebaseAuthDataSource {
   );
   Future<Either<AuthFailure, Unit>> signOut();
   Future<Either<AuthFailure, Unit>> updateDisplayName(UpdateDisplayNameRequest request);
-  Future<Either<AuthFailure, UserCredential>> verifyPhoneNumber(VerifyPhoneNumberRequest request);
+  Future<Either<AuthFailure, VerifyPhoneNumberResult>> verifyPhoneNumber(VerifyPhoneNumberRequest request);
   Future<Either<AuthFailure, UserModel>> confirmSmsCode(ConfirmSmsCodeRequest request);
 
 }
@@ -115,7 +116,8 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
 
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
-      return Left(AuthFailure("Error de Firebase: ${e.message}"));
+      log("FirebaseAuthDataSource/confirmSmsCode: ${e.code} - ${e.message}");
+      return Left(AuthFailure("Error de Firebase al verificar el código SMS"));
     } catch (e) {
       return Left(AuthFailure("Error inesperado en confirmación SMS: $e"));
     }
@@ -149,39 +151,31 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   @override
-  Future<Either<AuthFailure, UserCredential>> verifyPhoneNumber(
-      VerifyPhoneNumberRequest request,
-      ) async {
-    final completer = Completer<Either<AuthFailure, UserCredential>>();
+  Future<Either<AuthFailure, VerifyPhoneNumberResult>> verifyPhoneNumber(VerifyPhoneNumberRequest request) async {
+    final completer = Completer<Either<AuthFailure, VerifyPhoneNumberResult>>();
 
     try {
       await firebaseAuth.verifyPhoneNumber(
         phoneNumber: request.phoneNumber,
         timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted: (credential) async {
           try {
             final userCredential = await firebaseAuth.signInWithCredential(credential);
-            completer.complete(Right(userCredential));
+            completer.complete(Right(VerificationCompleted(userCredential)));
           } on FirebaseAuthException catch (e) {
             completer.complete(Left(_mapFirebaseAuthException(e)));
-          } catch (e) {
-            log("verifyPhoneNumber: Unexpected error during signInWithCredential - $e");
-            completer.complete(Left(UnexpectedPhoneVerificationFailure()));
           }
         },
-        verificationFailed: (FirebaseAuthException e) {
+        verificationFailed: (e) {
           completer.complete(Left(_mapFirebaseAuthException(e)));
         },
-        codeSent: (String verificationId, int? resendToken) {
-          request.codeSentCallback!(verificationId, resendToken)!;
+        codeSent: (verificationId, resendToken) {
+          completer.complete(Right(CodeSent(verificationId, resendToken)));
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
+        codeAutoRetrievalTimeout: (_) {},
       );
-    } on FirebaseAuthException catch (e) {
-      return Left(_mapFirebaseAuthException(e));
     } catch (e) {
-      log("verifyPhoneNumber: Unexpected error - $e");
-      return Left(UnexpectedPhoneVerificationFailure());
+      completer.complete(Left(UnexpectedPhoneVerificationFailure()));
     }
 
     return completer.future;

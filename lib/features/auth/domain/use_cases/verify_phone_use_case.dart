@@ -12,7 +12,7 @@ class VerifyPhoneNumberUseCase
   VerifyPhoneNumberUseCase(this.authRepository);
 
   @override
-  Future<Either<AuthFailure, Unit>> call(VerifyPhoneNumberRequest request) {
-    return authRepository.verifyPhoneNumber(request);
+  Future<Either<AuthFailure, Unit>> call(VerifyPhoneNumberRequest request) async {
+    return await authRepository.verifyPhoneNumber(request);
   }
 }

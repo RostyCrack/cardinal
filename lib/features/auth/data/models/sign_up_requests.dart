@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../domain/exceptions/auth_exceptions.dart';
+
 class SignUpRequest {
   final String email;
   final String password;
@@ -25,11 +27,9 @@ class SignUpRequest {
 
 class VerifyPhoneNumberRequest {
   final String phoneNumber;
-  final Function(String verificationId, int? resendToken)? codeSentCallback;
 
   VerifyPhoneNumberRequest({
     required this.phoneNumber,
-    required this.codeSentCallback,
   });
 }
 

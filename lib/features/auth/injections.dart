@@ -45,7 +45,8 @@ Future<void> initAuthInjections() async {
   ///Use Cases
   sl.registerSingleton<ListenAuthStateUseCase>(ListenAuthStateUseCase(sl<AuthRepository>()));
   sl.registerSingleton<SaveUserLocallyUseCase>(SaveUserLocallyUseCase(sl<UserRepository>()));
-  sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl<AuthRepository>()));
+  sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl<AuthRepository>(),
+  sl<UserRepository>()));
   sl.registerLazySingleton<ConfirmSmsCodeUseCase>(() => ConfirmSmsCodeUseCase(sl<AuthRepository>()));
   sl.registerLazySingleton<VerifyPhoneNumberUseCase>(() => VerifyPhoneNumberUseCase(sl<AuthRepository>()));
   sl.registerLazySingleton<SignUpUseCase>(()=> SignUpUseCase(authRepository: sl<AuthRepository>()));

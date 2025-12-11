@@ -169,7 +169,7 @@ class _LoginView extends StatelessWidget {
                           const Text("Don’t have an account?"),
                           TextButton(
                             onPressed: () {
-                              AppNavigator.pushReplacement(context, NewAccountScreen());
+                              AppNavigator.push(context, NewAccountScreen());
                             },
                             child: const Text("Sign up"),
                           ),
