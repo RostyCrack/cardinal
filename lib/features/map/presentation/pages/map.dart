@@ -5,12 +5,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../bloc/map_cubit.dart';
 import '../bloc/map_state.dart';
 
-
 class MapScreen extends StatelessWidget {
   final String title;
   final CameraPosition? initialCamera;
 
-  const MapScreen({super.key, this.title = 'Mapa', this.initialCamera});
+  const MapScreen({
+    super.key,
+    this.title = 'Mapa',
+    this.initialCamera,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class MapScreen extends StatelessWidget {
                 GoogleMap(
                   initialCameraPosition: state.camera,
                   markers: state.markers,
-                  myLocationEnabled: true,
+                  myLocationEnabled: state.hasLocationPermission,
                   myLocationButtonEnabled: true,
                   zoomControlsEnabled: false,
                   onMapCreated: context.read<MapCubit>().onMapCreated,
@@ -46,18 +49,7 @@ class MapScreen extends StatelessWidget {
                     bottom: 16,
                     left: 16,
                     right: 16,
-                    child: Material(
-                      elevation: 2,
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.red.withOpacity(0.9),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          state.error!,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
+                    child: _ErrorBanner(state.error!),
                   ),
               ],
             ),

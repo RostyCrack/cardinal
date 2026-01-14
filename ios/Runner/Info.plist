@@ -53,5 +53,16 @@
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Cardinal utiliza tu ubicación para rastrear en tiempo real el recorrido del bus, incluso cuando la app no está en uso, permitiendo el control operativo, la seguridad y el seguimiento de las rutas asignadas.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Cardinal necesita acceso permanente a tu ubicación para continuar registrando la posición del bus en segundo plano y garantizar el monitoreo continuo de la ruta durante el servicio.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Cardinal usa tu ubicación mientras la aplicación está en uso para mostrar el recorrido del bus, validar la ruta y mejorar la precisión del seguimiento durante la operación.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>location</string>
+    </array>
 </dict>
 </plist>
