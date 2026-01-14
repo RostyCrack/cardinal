@@ -1,33 +1,29 @@
 // data/models/user_model.dart
 import 'package:hive/hive.dart';
+
 import '../../domain/entities/user_entity.dart';
 
-part 'user_model.g.dart';
-
-@HiveType(typeId: 0) // id único para este model
 class UserModel extends UserEntity {
-  @HiveField(0)
-  @override
-  final String id;
-
-  @HiveField(1)
-  @override
-  final String email;
-
-  @HiveField(2)
-  @override
-  final String? displayName;
-
-  @override
-  @HiveField(3)
-  final String? phoneNumber;
-
   const UserModel({
-    required this.id,
-    required this.email,
-    required this.displayName,
-    required this.phoneNumber,
-  }) : super(id: id, email: email, displayName: displayName, phoneNumber: phoneNumber);
+    required super.id,
+    required super.email,
+    required super.displayName,
+    required super.phoneNumber,
+  });
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'email': email,
+    'displayName': displayName,
+    'phoneNumber': phoneNumber,
+  };
+
+  factory UserModel.fromMap(Map map) => UserModel(
+    id: map['id'],
+    email: map['email'],
+    displayName: map['displayName'],
+    phoneNumber: map['phoneNumber'],
+  );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -62,5 +58,28 @@ class UserModel extends UserEntity {
     'displayName': displayName,
     'phoneNumber': phoneNumber,
   };
+}
 
+
+class UserModelAdapter extends TypeAdapter<UserModel> {
+  @override
+  final int typeId = 0;
+
+  @override
+  UserModel read(BinaryReader reader) {
+    return UserModel(
+      id: reader.readString(),
+      email: reader.readString(),
+      displayName: reader.readString(),
+      phoneNumber: reader.readString(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UserModel obj) {
+    writer.writeString(obj.id);
+    writer.writeString(obj.email);
+    writer.writeString(obj.displayName!);
+    writer.writeString(obj.phoneNumber!);
+  }
 }

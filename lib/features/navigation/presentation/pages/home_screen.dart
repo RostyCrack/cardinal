@@ -1,3 +1,4 @@
+import 'package:cardinal/features/qr_scanner/presentation/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     HomeOption(title: "Operación", icon: LucideIcons.briefcase),
     HomeOption(title: "FUEC", icon: LucideIcons.fileText),
     HomeOption(title: "Mapa", icon: LucideIcons.map),
+    HomeOption(title: "Lector QR", icon: LucideIcons.qrCode),
   ];
 
   void _onOptionSelected(BuildContext context, HomeOption option) {
@@ -29,6 +31,9 @@ class HomeScreen extends StatelessWidget {
         break;
       case "Mapa":
         AppNavigator.push(context, const MapScreen());
+        break;
+      case "Lector QR":
+        AppNavigator.push(context, const QrScanner());
         break;
       default:
         debugPrint("Opción no implementada: ${option.title}");
