@@ -1,24 +1,51 @@
-import 'package:cardinal/core/use_case/use_case.dart';
+import 'dart:async';
+
 import 'package:cardinal/features/map/domain/use_cases/start_tracking.dart';
+import 'package:cardinal/features/map/domain/use_cases/stop_tracking.dart';
 import 'package:cardinal/features/map/presentation/bloc/tracking_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/use_cases/stop_tracking.dart';
+import '../../../../core/use_case/use_case.dart';
+import '../../domain/entities/location_entity.dart';
 
 class TrackingCubit extends Cubit<TrackingState> {
-  final StartTrackingUseCase startTrackingUseCase;
-  final StopTrackingUseCase stopTrackingUseCase;
+  final StartTrackingUseCase startTracking;
+  final StopTrackingUseCase stopTracking;
+  final Stream<LocationEntity> locationStream;
 
-  TrackingCubit(this.startTrackingUseCase, this.stopTrackingUseCase)
-    : super(TrackingStopped());
+  StreamSubscription<LocationEntity>? _sub;
+
+  TrackingCubit({
+    required this.startTracking,
+    required this.stopTracking,
+    required this.locationStream,
+  }) : super(TrackingInitial());
 
   Future<void> start() async {
-    await startTrackingUseCase(const NoParams());
-    emit(TrackingRunning());
+    final result = await startTracking(const NoParams());
+
+    result.fold(
+          (failure) => emit(TrackingError(failure)),
+          (_) {
+        emit(TrackingRunning());
+        _sub = locationStream.listen(_onLocation);
+      },
+    );
+  }
+
+  void _onLocation(LocationEntity location) {
+    emit(TrackingLocationUpdated(location));
   }
 
   Future<void> stop() async {
-    await stopTrackingUseCase(const NoParams());
+    await _sub?.cancel();
+    await stopTracking(const NoParams());
     emit(TrackingStopped());
+  }
+
+  @override
+  Future<void> close() {
+    _sub?.cancel();
+    return super.close();
   }
 }

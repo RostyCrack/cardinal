@@ -2,11 +2,13 @@ import 'package:dartz/dartz.dart';
 
 import '../../domain/entities/location_entity.dart';
 import '../../domain/exceptions/tracking_failure.dart';
+import '../../domain/repositories/tracking_repository.dart';
+import '../datasource/location_datasource.dart';
 
 class TrackingRepositoryImpl implements TrackingRepository {
   final LocationDatasource datasource;
 
-  TrackingRepositoryImpl(this.datasource);
+  TrackingRepositoryImpl({required this.datasource});
 
   @override
   Future<Either<TrackingFailure, Unit>> startTracking() async {

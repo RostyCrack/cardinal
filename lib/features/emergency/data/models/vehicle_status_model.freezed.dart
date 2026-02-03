@@ -12,8 +12,7 @@ part of 'vehicle_status_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 VehicleStatusModel _$VehicleStatusModelFromJson(Map<String, dynamic> json) {
   return _VehicleStatusModel.fromJson(json);
@@ -27,12 +26,8 @@ mixin _$VehicleStatusModel {
   DateTime get timestamp => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
 
-  /// Serializes this VehicleStatusModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of VehicleStatusModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $VehicleStatusModelCopyWith<VehicleStatusModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -40,17 +35,15 @@ mixin _$VehicleStatusModel {
 /// @nodoc
 abstract class $VehicleStatusModelCopyWith<$Res> {
   factory $VehicleStatusModelCopyWith(
-    VehicleStatusModel value,
-    $Res Function(VehicleStatusModel) then,
-  ) = _$VehicleStatusModelCopyWithImpl<$Res, VehicleStatusModel>;
+          VehicleStatusModel value, $Res Function(VehicleStatusModel) then) =
+      _$VehicleStatusModelCopyWithImpl<$Res, VehicleStatusModel>;
   @useResult
-  $Res call({
-    double latitude,
-    double longitude,
-    String vehicleId,
-    DateTime timestamp,
-    String status,
-  });
+  $Res call(
+      {double latitude,
+      double longitude,
+      String vehicleId,
+      DateTime timestamp,
+      String status});
 }
 
 /// @nodoc
@@ -63,8 +56,6 @@ class _$VehicleStatusModelCopyWithImpl<$Res, $Val extends VehicleStatusModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of VehicleStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -74,63 +65,55 @@ class _$VehicleStatusModelCopyWithImpl<$Res, $Val extends VehicleStatusModel>
     Object? timestamp = null,
     Object? status = null,
   }) {
-    return _then(
-      _value.copyWith(
-            latitude: null == latitude
-                ? _value.latitude
-                : latitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            longitude: null == longitude
-                ? _value.longitude
-                : longitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            vehicleId: null == vehicleId
-                ? _value.vehicleId
-                : vehicleId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            timestamp: null == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      vehicleId: null == vehicleId
+          ? _value.vehicleId
+          : vehicleId // ignore: cast_nullable_to_non_nullable
+              as String,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$VehicleStatusModelImplCopyWith<$Res>
     implements $VehicleStatusModelCopyWith<$Res> {
-  factory _$$VehicleStatusModelImplCopyWith(
-    _$VehicleStatusModelImpl value,
-    $Res Function(_$VehicleStatusModelImpl) then,
-  ) = __$$VehicleStatusModelImplCopyWithImpl<$Res>;
+  factory _$$VehicleStatusModelImplCopyWith(_$VehicleStatusModelImpl value,
+          $Res Function(_$VehicleStatusModelImpl) then) =
+      __$$VehicleStatusModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    double latitude,
-    double longitude,
-    String vehicleId,
-    DateTime timestamp,
-    String status,
-  });
+  $Res call(
+      {double latitude,
+      double longitude,
+      String vehicleId,
+      DateTime timestamp,
+      String status});
 }
 
 /// @nodoc
 class __$$VehicleStatusModelImplCopyWithImpl<$Res>
     extends _$VehicleStatusModelCopyWithImpl<$Res, _$VehicleStatusModelImpl>
     implements _$$VehicleStatusModelImplCopyWith<$Res> {
-  __$$VehicleStatusModelImplCopyWithImpl(
-    _$VehicleStatusModelImpl _value,
-    $Res Function(_$VehicleStatusModelImpl) _then,
-  ) : super(_value, _then);
+  __$$VehicleStatusModelImplCopyWithImpl(_$VehicleStatusModelImpl _value,
+      $Res Function(_$VehicleStatusModelImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of VehicleStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,43 +123,40 @@ class __$$VehicleStatusModelImplCopyWithImpl<$Res>
     Object? timestamp = null,
     Object? status = null,
   }) {
-    return _then(
-      _$VehicleStatusModelImpl(
-        latitude: null == latitude
-            ? _value.latitude
-            : latitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        longitude: null == longitude
-            ? _value.longitude
-            : longitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        vehicleId: null == vehicleId
-            ? _value.vehicleId
-            : vehicleId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        timestamp: null == timestamp
-            ? _value.timestamp
-            : timestamp // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$VehicleStatusModelImpl(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      vehicleId: null == vehicleId
+          ? _value.vehicleId
+          : vehicleId // ignore: cast_nullable_to_non_nullable
+              as String,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$VehicleStatusModelImpl implements _VehicleStatusModel {
-  const _$VehicleStatusModelImpl({
-    required this.latitude,
-    required this.longitude,
-    required this.vehicleId,
-    required this.timestamp,
-    required this.status,
-  });
+  const _$VehicleStatusModelImpl(
+      {required this.latitude,
+      required this.longitude,
+      required this.vehicleId,
+      required this.timestamp,
+      required this.status});
 
   factory _$VehicleStatusModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$VehicleStatusModelImplFromJson(json);
@@ -213,42 +193,33 @@ class _$VehicleStatusModelImpl implements _VehicleStatusModel {
             (identical(other.status, status) || other.status == status));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    latitude,
-    longitude,
-    vehicleId,
-    timestamp,
-    status,
-  );
+      runtimeType, latitude, longitude, vehicleId, timestamp, status);
 
-  /// Create a copy of VehicleStatusModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$VehicleStatusModelImplCopyWith<_$VehicleStatusModelImpl> get copyWith =>
       __$$VehicleStatusModelImplCopyWithImpl<_$VehicleStatusModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VehicleStatusModelImplToJson(this);
+    return _$$VehicleStatusModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _VehicleStatusModel implements VehicleStatusModel {
-  const factory _VehicleStatusModel({
-    required final double latitude,
-    required final double longitude,
-    required final String vehicleId,
-    required final DateTime timestamp,
-    required final String status,
-  }) = _$VehicleStatusModelImpl;
+  const factory _VehicleStatusModel(
+      {required final double latitude,
+      required final double longitude,
+      required final String vehicleId,
+      required final DateTime timestamp,
+      required final String status}) = _$VehicleStatusModelImpl;
 
   factory _VehicleStatusModel.fromJson(Map<String, dynamic> json) =
       _$VehicleStatusModelImpl.fromJson;
@@ -263,11 +234,8 @@ abstract class _VehicleStatusModel implements VehicleStatusModel {
   DateTime get timestamp;
   @override
   String get status;
-
-  /// Create a copy of VehicleStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$VehicleStatusModelImplCopyWith<_$VehicleStatusModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

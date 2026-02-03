@@ -5,6 +5,7 @@ import 'package:cardinal/features/emergency/domain/repositories/audio_repository
 import 'package:cardinal/features/emergency/domain/use_cases/start_recording_use_case.dart';
 import 'package:cardinal/features/emergency/domain/use_cases/upload_recording_use_case.dart';
 import 'package:cardinal/features/emergency/presentation/cubit/emergency_cubit.dart';
+import 'package:cardinal/features/map/presentation/bloc/map_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:record/record.dart';
@@ -44,5 +45,7 @@ Future<void> initEmergencyInjections() async {
     () => SaveVehicleLocationUseCase(sl<VehicleStatusRepository>()),
   );
 
+
   // Cubit
+
 }

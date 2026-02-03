@@ -12,8 +12,7 @@ part of 'recording.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Recording _$RecordingFromJson(Map<String, dynamic> json) {
   return _Recording.fromJson(json);
@@ -24,12 +23,8 @@ mixin _$Recording {
   String get filePath => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
 
-  /// Serializes this Recording to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Recording
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $RecordingCopyWith<Recording> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,24 +47,22 @@ class _$RecordingCopyWithImpl<$Res, $Val extends Recording>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Recording
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? filePath = null, Object? timestamp = null}) {
-    return _then(
-      _value.copyWith(
-            filePath: null == filePath
-                ? _value.filePath
-                : filePath // ignore: cast_nullable_to_non_nullable
-                      as String,
-            timestamp: null == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? filePath = null,
+    Object? timestamp = null,
+  }) {
+    return _then(_value.copyWith(
+      filePath: null == filePath
+          ? _value.filePath
+          : filePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
   }
 }
 
@@ -77,9 +70,8 @@ class _$RecordingCopyWithImpl<$Res, $Val extends Recording>
 abstract class _$$RecordingImplCopyWith<$Res>
     implements $RecordingCopyWith<$Res> {
   factory _$$RecordingImplCopyWith(
-    _$RecordingImpl value,
-    $Res Function(_$RecordingImpl) then,
-  ) = __$$RecordingImplCopyWithImpl<$Res>;
+          _$RecordingImpl value, $Res Function(_$RecordingImpl) then) =
+      __$$RecordingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String filePath, DateTime timestamp});
@@ -90,27 +82,25 @@ class __$$RecordingImplCopyWithImpl<$Res>
     extends _$RecordingCopyWithImpl<$Res, _$RecordingImpl>
     implements _$$RecordingImplCopyWith<$Res> {
   __$$RecordingImplCopyWithImpl(
-    _$RecordingImpl _value,
-    $Res Function(_$RecordingImpl) _then,
-  ) : super(_value, _then);
+      _$RecordingImpl _value, $Res Function(_$RecordingImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Recording
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? filePath = null, Object? timestamp = null}) {
-    return _then(
-      _$RecordingImpl(
-        filePath: null == filePath
-            ? _value.filePath
-            : filePath // ignore: cast_nullable_to_non_nullable
-                  as String,
-        timestamp: null == timestamp
-            ? _value.timestamp
-            : timestamp // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-      ),
-    );
+  $Res call({
+    Object? filePath = null,
+    Object? timestamp = null,
+  }) {
+    return _then(_$RecordingImpl(
+      filePath: null == filePath
+          ? _value.filePath
+          : filePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
   }
 }
 
@@ -143,13 +133,11 @@ class _$RecordingImpl implements _Recording {
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, filePath, timestamp);
 
-  /// Create a copy of Recording
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RecordingImplCopyWith<_$RecordingImpl> get copyWith =>
@@ -157,15 +145,16 @@ class _$RecordingImpl implements _Recording {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RecordingImplToJson(this);
+    return _$$RecordingImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Recording implements Recording {
-  const factory _Recording({
-    required final String filePath,
-    required final DateTime timestamp,
-  }) = _$RecordingImpl;
+  const factory _Recording(
+      {required final String filePath,
+      required final DateTime timestamp}) = _$RecordingImpl;
 
   factory _Recording.fromJson(Map<String, dynamic> json) =
       _$RecordingImpl.fromJson;
@@ -174,11 +163,8 @@ abstract class _Recording implements Recording {
   String get filePath;
   @override
   DateTime get timestamp;
-
-  /// Create a copy of Recording
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RecordingImplCopyWith<_$RecordingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
