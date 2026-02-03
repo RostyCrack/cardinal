@@ -15,7 +15,7 @@ class MapCubit extends Cubit<MapState> {
           const CameraPosition(
             target: LatLng(4.710989, -74.072090), // Bogotá
             zoom: 12,
-          ),
+          ), hasLocationPermission: false,
     ),
   ) {
     _init();

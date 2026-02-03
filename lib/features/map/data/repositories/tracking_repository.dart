@@ -1,3 +1,8 @@
+import 'package:dartz/dartz.dart';
+
+import '../../domain/entities/location_entity.dart';
+import '../../domain/exceptions/tracking_failure.dart';
+
 class TrackingRepositoryImpl implements TrackingRepository {
   final LocationDatasource datasource;
 
