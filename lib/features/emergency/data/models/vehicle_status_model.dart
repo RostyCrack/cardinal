@@ -1,25 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/vehicle_status.dart';
 
-part 'vehicle_status_model.freezed.dart';
-part 'vehicle_status_model.g.dart';
+class VehicleStatusModel {
+  final double latitude;
+  final double longitude;
+  final String vehicleId;
+  final DateTime timestamp;
+  final String status;
 
-@freezed
-class VehicleStatusModel with _$VehicleStatusModel {
-  const factory VehicleStatusModel({
-    required double latitude,
-    required double longitude,
-    required String vehicleId,
-    required DateTime timestamp,
-    required String status,
-  }) = _VehicleStatusModel;
+  const VehicleStatusModel({
+    required this.latitude,
+    required this.longitude,
+    required this.vehicleId,
+    required this.timestamp,
+    required this.status,
+  });
 
-  /// fromJson para json_serializable
-  factory VehicleStatusModel.fromJson(Map<String, dynamic> json) =>
-      _$VehicleStatusModelFromJson(json);
+  factory VehicleStatusModel.fromJson(Map<String, dynamic> json) => VehicleStatusModel(
+    latitude: (json['latitude'] as num).toDouble(),
+    longitude: (json['longitude'] as num).toDouble(),
+    vehicleId: json['vehicleId'] as String,
+    timestamp: DateTime.parse(json['timestamp'] as String),
+    status: json['status'] as String,
+  );
 
-  /// fromMap para Firestore (GeoPoint + Timestamp)
+  Map<String, dynamic> toJson() => {
+    'latitude': latitude,
+    'longitude': longitude,
+    'vehicleId': vehicleId,
+    'timestamp': timestamp.toIso8601String(),
+    'status': status,
+  };
+
   factory VehicleStatusModel.fromMap(Map<String, dynamic> map) {
     final geoPoint = map['location'] as GeoPoint;
     return VehicleStatusModel(
@@ -31,38 +43,58 @@ class VehicleStatusModel with _$VehicleStatusModel {
     );
   }
 
-  /// fromEntity
-  factory VehicleStatusModel.fromEntity(VehicleStatus entity) {
-    return VehicleStatusModel(
-      latitude: entity.latitude,
-      longitude: entity.longitude,
-      vehicleId: entity.vehicleId,
-      timestamp: entity.timestamp,
-      status: entity.status,
-    );
-  }
-}
+  factory VehicleStatusModel.fromEntity(VehicleStatus entity) => VehicleStatusModel(
+    latitude: entity.latitude,
+    longitude: entity.longitude,
+    vehicleId: entity.vehicleId,
+    timestamp: entity.timestamp,
+    status: entity.status,
+  );
 
-/// Métodos auxiliares fuera de la clase Freezed
-extension VehicleStatusModelX on VehicleStatusModel {
-  /// Convertir a Map de Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'location': GeoPoint(latitude, longitude),
-      'vehicleId': vehicleId,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'status': status,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+    'location': GeoPoint(latitude, longitude),
+    'vehicleId': vehicleId,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'status': status,
+  };
 
-  /// Convertir a entidad
-  VehicleStatus toEntity() {
-    return VehicleStatus(
-      latitude: latitude,
-      longitude: longitude,
-      vehicleId: vehicleId,
-      timestamp: timestamp,
-      status: status,
-    );
-  }
+  VehicleStatus toEntity() => VehicleStatus(
+    latitude: latitude,
+    longitude: longitude,
+    vehicleId: vehicleId,
+    timestamp: timestamp,
+    status: status,
+  );
+
+  VehicleStatusModel copyWith({
+    double? latitude,
+    double? longitude,
+    String? vehicleId,
+    DateTime? timestamp,
+    String? status,
+  }) => VehicleStatusModel(
+    latitude: latitude ?? this.latitude,
+    longitude: longitude ?? this.longitude,
+    vehicleId: vehicleId ?? this.vehicleId,
+    timestamp: timestamp ?? this.timestamp,
+    status: status ?? this.status,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VehicleStatusModel &&
+          runtimeType == other.runtimeType &&
+          latitude == other.latitude &&
+          longitude == other.longitude &&
+          vehicleId == other.vehicleId &&
+          timestamp == other.timestamp &&
+          status == other.status;
+
+  @override
+  int get hashCode => Object.hash(latitude, longitude, vehicleId, timestamp, status);
+
+  @override
+  String toString() =>
+      'VehicleStatusModel(latitude: $latitude, longitude: $longitude, vehicleId: $vehicleId, timestamp: $timestamp, status: $status)';
 }

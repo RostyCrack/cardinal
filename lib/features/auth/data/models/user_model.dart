@@ -1,49 +1,29 @@
-// data/models/user_model.dart
-import 'package:hive/hive.dart';
+import 'package:cardinal/core/database/app_database.dart';
 import '../../domain/entities/user_entity.dart';
 
-part 'user_model.g.dart';
-
-@HiveType(typeId: 0) // id único para este model
 class UserModel extends UserEntity {
-  @HiveField(0)
-  @override
-  final String id;
-
-  @HiveField(1)
-  @override
-  final String email;
-
-  @HiveField(2)
-  @override
-  final String? displayName;
-
-  @override
-  @HiveField(3)
-  final String? phoneNumber;
-
   const UserModel({
-    required this.id,
-    required this.email,
-    required this.displayName,
-    required this.phoneNumber,
-  }) : super(id: id, email: email, displayName: displayName, phoneNumber: phoneNumber);
+    required super.id,
+    required super.email,
+    super.displayName,
+    super.phoneNumber,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      email: json['email'],
-      displayName: json['displayName'],
-      phoneNumber: json['phoneNumber'],
+      id: json['id'] as String,
+      email: json['email'] as String,
+      displayName: json['displayName'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
     );
   }
 
   factory UserModel.fromFirebase(dynamic user) {
     return UserModel(
-      id: user.uid,
-      email: user.email ?? '',
-      displayName: user.displayName ?? "Usuario",
-      phoneNumber: user.phoneNumber,
+      id: user.uid as String,
+      email: (user.email ?? '') as String,
+      displayName: (user.displayName ?? 'Usuario') as String,
+      phoneNumber: user.phoneNumber as String?,
     );
   }
 
@@ -56,11 +36,20 @@ class UserModel extends UserEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'email': email,
-    'displayName': displayName,
-    'phoneNumber': phoneNumber,
-  };
+  /// Creates a [UserModel] from a Drift-generated [User] row.
+  factory UserModel.fromDrift(User row) {
+    return UserModel(
+      id: row.id,
+      email: row.email,
+      displayName: row.displayName,
+      phoneNumber: row.phoneNumber,
+    );
+  }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'email': email,
+        'displayName': displayName,
+        'phoneNumber': phoneNumber,
+      };
 }

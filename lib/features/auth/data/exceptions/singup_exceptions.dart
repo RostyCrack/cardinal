@@ -62,3 +62,9 @@ class PhoneVerificationTimeoutFailure extends PhoneVerificationFailure {
 class UnexpectedPhoneVerificationFailure extends PhoneVerificationFailure {
   const UnexpectedPhoneVerificationFailure([super.message = 'Ocurrió un error desconocido en la verificación.']);
 }
+
+/// Phone credential already linked to another account
+class FirebaseCredentialAlreadyInUseFailure extends PhoneVerificationFailure {
+  const FirebaseCredentialAlreadyInUseFailure()
+      : super('Este número de teléfono ya está vinculado a otra cuenta.');
+}

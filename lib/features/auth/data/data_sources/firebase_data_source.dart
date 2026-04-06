@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'package:cardinal/features/auth/data/exceptions/log_out_exceptions.dart';
 import 'package:cardinal/features/auth/data/models/login_response.dart';
 import 'package:cardinal/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cardinal/features/auth/domain/use_cases/signup/send_otp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../exceptions/login_exceptions.dart';
@@ -29,6 +30,14 @@ abstract class FirebaseAuthDataSource {
   Future<Either<AuthFailure, VerifyPhoneNumberResult>> verifyPhoneNumber(VerifyPhoneNumberRequest request);
   Future<Either<AuthFailure, UserModel>> confirmSmsCode(ConfirmSmsCodeRequest request);
 
+  /// Sends an OTP and returns the verificationId via [OtpSentResponse].
+  Future<Either<AuthFailure, OtpSentResponse>> sendOtp(String phoneNumber);
+
+  /// Links a phone credential to the currently signed-in user (does not sign in).
+  Future<Either<AuthFailure, Unit>> linkPhoneCredential(
+    String verificationId,
+    String smsCode,
+  );
 }
 
 class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
@@ -122,7 +131,6 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       return Left(AuthFailure("Error inesperado en confirmación SMS: $e"));
     }
   }
-
   @override
   Future<Either<AuthFailure, Unit>> updateDisplayName(
       UpdateDisplayNameRequest request,
@@ -179,6 +187,78 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
     }
 
     return completer.future;
+  }
+
+  @override
+  Future<Either<AuthFailure, OtpSentResponse>> sendOtp(String phoneNumber) async {
+    final completer = Completer<Either<AuthFailure, OtpSentResponse>>();
+
+    try {
+      await firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (_) {
+          // Auto-verification not supported in SSO sign-up flow
+          if (!completer.isCompleted) {
+            completer.complete(
+              Left(AuthFailure('Auto-verification not supported in this flow.')),
+            );
+          }
+        },
+        verificationFailed: (e) {
+          if (!completer.isCompleted) {
+            completer.complete(Left(_mapFirebaseAuthException(e)));
+          }
+        },
+        codeSent: (verificationId, resendToken) {
+          if (!completer.isCompleted) {
+            completer.complete(
+              Right(OtpSentResponse(
+                verificationId: verificationId,
+                resendToken: resendToken,
+              )),
+            );
+          }
+        },
+        codeAutoRetrievalTimeout: (_) {},
+      );
+    } catch (e) {
+      if (!completer.isCompleted) {
+        completer.complete(Left(UnexpectedPhoneVerificationFailure()));
+      }
+    }
+
+    return completer.future;
+  }
+
+  @override
+  Future<Either<AuthFailure, Unit>> linkPhoneCredential(
+    String verificationId,
+    String smsCode,
+  ) async {
+    try {
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      final user = firebaseAuth.currentUser;
+      if (user == null) {
+        return Left(UserNotFoundFailure());
+      }
+
+      await user.linkWithCredential(credential);
+      return const Right(unit);
+    } on FirebaseAuthException catch (e) {
+      log('FirebaseAuthDataSource/linkPhoneCredential: ${e.code} - ${e.message}');
+      if (e.code == 'credential-already-in-use' || e.code == 'provider-already-linked') {
+        return Left(FirebaseCredentialAlreadyInUseFailure());
+      }
+      return Left(_mapFirebaseAuthException(e));
+    } catch (e, s) {
+      log('FirebaseAuthDataSource/linkPhoneCredential unexpected: $e', stackTrace: s);
+      return Left(AuthFailure('Unexpected error linking phone credential.'));
+    }
   }
 
   AuthFailure _mapFirebaseAuthException(FirebaseAuthException e) {

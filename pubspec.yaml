@@ -32,12 +32,14 @@ dependencies:
     sdk: flutter
   firebase_core: any
   firebase_auth: any
-  cloud_firestore: ^6.0.0
+  firebase_messaging: any
+  cloud_firestore: ^6.2.0
   geolocator: ^14.0.2
   dartz: any
   google_maps_flutter: any
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  drift: ^2.32.1
+  drift_flutter: ^0.3.0
+  sqlite3_flutter_libs: ^0.6.0+eol
   dio: any
   get_it: any
   flutter_bloc: any
@@ -46,19 +48,24 @@ dependencies:
   lucide_icons: any
   permission_handler: any
   path_provider: ^2.1.5
-  record: ^6.1.1
-  json_annotation: ^4.9.0
-  freezed_annotation: ^2.4.1
-  flutter_background_service: ^2.4.6
+  record: ^6.2.0
+  retrofit: ^4.9.2
+  json_annotation: ^4.11.0
+  freezed_annotation: ^3.1.0
+  flutter_background_service: ^5.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  #retrofit_generator: ^9.7.0
-  json_serializable: ^6.7.0
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.11
+  retrofit_generator: ^10.2.3
+  json_serializable: ^6.13.1
+  drift_dev: ^2.32.1
+  build_runner: ^2.13.1
+  freezed: ^3.2.5
+
+  # retrofit_generator: incompatible with Dart SDK ^3.8.0 (upstream bug)
+  # Client is implemented manually in sso_api_client.dart
   #freezed: ^2.5.7
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,15 +1,38 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class Recording {
+  final String filePath;
+  final DateTime timestamp;
 
-part 'recording.freezed.dart';
-part 'recording.g.dart';
+  const Recording({
+    required this.filePath,
+    required this.timestamp,
+  });
 
-@freezed
-class Recording with _$Recording {
-  const factory Recording({
-    required String filePath,
-    required DateTime timestamp,
-  }) = _Recording;
+  factory Recording.fromJson(Map<String, dynamic> json) => Recording(
+    filePath: json['filePath'] as String,
+    timestamp: DateTime.parse(json['timestamp'] as String),
+  );
 
-  factory Recording.fromJson(Map<String, dynamic> json) =>
-      _$RecordingFromJson(json);
+  Map<String, dynamic> toJson() => {
+    'filePath': filePath,
+    'timestamp': timestamp.toIso8601String(),
+  };
+
+  Recording copyWith({String? filePath, DateTime? timestamp}) => Recording(
+    filePath: filePath ?? this.filePath,
+    timestamp: timestamp ?? this.timestamp,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Recording &&
+          runtimeType == other.runtimeType &&
+          filePath == other.filePath &&
+          timestamp == other.timestamp;
+
+  @override
+  int get hashCode => Object.hash(filePath, timestamp);
+
+  @override
+  String toString() => 'Recording(filePath: $filePath, timestamp: $timestamp)';
 }

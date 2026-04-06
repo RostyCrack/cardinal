@@ -1,11 +1,9 @@
-
+import 'package:cardinal/core/database/app_database.dart';
 import 'package:cardinal/features/auth/data/models/user_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:hive/hive.dart';
+import 'package:drift/drift.dart';
 
-import 'package:hive/hive.dart';
 import '../../domain/exceptions/auth_exceptions.dart';
-import '../models/user_model.dart';
 
 abstract class UserLocalDataSource {
   Future<Either<AuthFailure, Unit>> saveUser(UserModel user);
@@ -14,39 +12,50 @@ abstract class UserLocalDataSource {
   Future<UserModel> updateUser(UserModel user);
 }
 
-// Implementación concreta
 class UserLocalDataSourceImpl implements UserLocalDataSource {
-  final Box<UserModel> userBox;
+  final AppDatabase _db;
 
-  UserLocalDataSourceImpl(this.userBox);
+  UserLocalDataSourceImpl(this._db);
 
   @override
   Future<Either<AuthFailure, Unit>> saveUser(UserModel user) async {
-    await userBox.put('user', user);
-    final savedUser = userBox.get('user');
-    if (savedUser == null) {
-      return Left(AuthFailure('Error al guardar el usuario'));
+    try {
+      await _db.into(_db.users).insertOnConflictUpdate(
+            UsersCompanion(
+              id: Value(user.id),
+              email: Value(user.email),
+              displayName: Value(user.displayName),
+              phoneNumber: Value(user.phoneNumber),
+            ),
+          );
+      return const Right(unit);
+    } catch (e) {
+      return Left(AuthFailure('Error al guardar el usuario: $e'));
     }
-    return Right(unit);
   }
 
   @override
   Future<UserModel?> getUser() async {
-    return userBox.get('user');
+    final row = await (_db.select(_db.users)..limit(1)).getSingleOrNull();
+    if (row == null) return null;
+    return UserModel.fromDrift(row);
   }
 
   @override
   Future<void> deleteUser() async {
-    await userBox.delete('user');
+    await _db.delete(_db.users).go();
   }
 
   @override
   Future<UserModel> updateUser(UserModel user) async {
-    await userBox.put('user', user);
-    final updatedUser = userBox.get('user');
-    if (updatedUser == null) {
-      throw Exception('Error al actualizar el usuario');
-    }
-    return updatedUser;
+    await _db.into(_db.users).insertOnConflictUpdate(
+          UsersCompanion(
+            id: Value(user.id),
+            email: Value(user.email),
+            displayName: Value(user.displayName),
+            phoneNumber: Value(user.phoneNumber),
+          ),
+        );
+    return user;
   }
 }
